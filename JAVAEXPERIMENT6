@@ -1,0 +1,67 @@
+import java.io.*;
+
+// Step 1: Create the Student class and make it Serializable
+class Student implements Serializable {
+    // Recommended for Serializable classes
+    private static final long serialVersionUID = 1L;
+
+    private int studentID;
+    private String name;
+    private double grade;
+
+    // Constructor
+    public Student(int studentID, String name, double grade) {
+        this.studentID = studentID;
+        this.name = name;
+        this.grade = grade;
+    }
+
+    // Getters for printing
+    public int getStudentID() {
+        return studentID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getGrade() {
+        return grade;
+    }
+}
+
+public class StudentSerializationDemo {
+    public static void main(String[] args) {
+        // Step 2: Create a Student object
+        Student student = new Student(101, "Aditya", 9.5);
+
+        String filename = "student.ser"; // file to store serialized object
+
+        // Step 3: Serialize the object to a file
+        try (FileOutputStream fileOut = new FileOutputStream(filename);
+             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+
+            out.writeObject(student);
+            System.out.println("Student object serialized and saved to " + filename);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Step 4: Deserialize the object from the file
+        try (FileInputStream fileIn = new FileInputStream(filename);
+             ObjectInputStream in = new ObjectInputStream(fileIn)) {
+
+            Student deserializedStudent = (Student) in.readObject();
+
+            // Step 5: Print the student's data to verify
+            System.out.println("\nStudent object deserialized:");
+            System.out.println("ID: " + deserializedStudent.getStudentID());
+            System.out.println("Name: " + deserializedStudent.getName());
+            System.out.println("Grade: " + deserializedStudent.getGrade());
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
